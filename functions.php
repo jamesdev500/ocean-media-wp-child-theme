@@ -32,16 +32,6 @@ return $button .= "<span aria-hidden='true'></span>";
 }
 
 // START: Disable all cookies when in EU using CF_Geoplugin
-
-function console_log($output, $with_script_tags = true) {
-    $js_code = 'console.log(' . json_encode($output, JSON_HEX_TAG) . 
-');';
-    if ($with_script_tags) {
-        $js_code = '<script>' . $js_code . '</script>';
-    }
-    echo $js_code;
-}
-
 function prefix_footer_code() {
     ?>
 	<script>
@@ -66,16 +56,16 @@ function remove_cookies_on_eu() {
     if (class_exists('CF_Geoplugin') && !is_admin() ) {
         $client_IP = do_shortcode( '[cfgeo return="ip"]' );
         $client_continent = do_shortcode( '[cfgeo_continent_code]' );
-        echo console_log('client IP: ' . $client_IP);
-        echo console_log('client continent: ' . $client_continent);
-        if ($client_continent === 'EU') {
+        echo 'client IP: ' . $client_IP;
+        echo 'client continent: ' . $client_continent;
+        if ($client_continent === 'AS' || $client_continent === 'NA') {
             ini_set('session.use_cookies', '0');
             unsetAllCookies();
-            echo console_log('client continent is in EU, all cookies disabled');
+            echo 'client continent is in AS / NA, all cookies disabled';
             add_action( 'wp_footer', 'prefix_footer_code' );
         }
     } else {
-        echo console_log('CF_Geoplugin NOT INSTALLED / currently in Admin');
+        echo 'CF_Geoplugin NOT INSTALLED';
     }
 }
 add_action( 'wp_loaded','remove_cookies_on_eu' );
