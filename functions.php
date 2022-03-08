@@ -44,11 +44,7 @@ function console_log($output, $with_script_tags = true) {
 function prefix_footer_code() {
 ?>
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const gpdrPopUp = document.getElementById('cookie-law-info-bar');
-            gpdrPopUp.remove();
-            console.log('gpdrPopUp removed...');
-
+        function deleteAllCookies() {
             var cookies = document.cookie.split("; ");
             for (var c = 0; c < cookies.length; c++) {
                 var d = window.location.hostname.split(".");
@@ -63,8 +59,20 @@ function prefix_footer_code() {
                     d.shift();
                 }
             }
-            console.log('cookies JS removed...');
+            console.log('cookies deleted...');
+        }
 
+        deleteAllCookies();
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const gpdrPopUp = document.getElementById('cookie-law-info-bar');
+            gpdrPopUp.remove();
+            console.log('gpdrPopUp removed...');
+
+            deleteAllCookies();
+            setTimeout(function() {
+                deleteAllCookies();
+            }, 1000);
         });
     </script>
 <?php
