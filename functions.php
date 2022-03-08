@@ -34,8 +34,7 @@ return $button .= "<span aria-hidden='true'></span>";
 // START: Disable all cookies when in EU using CF_Geoplugin
 
 function console_log($output, $with_script_tags = true) {
-    $js_code = 'console.log(' . json_encode($output, JSON_HEX_TAG) . 
-');';
+    $js_code = 'console.log(' . json_encode($output, JSON_HEX_TAG) . ');';
     if ($with_script_tags) {
         $js_code = '<script>' . $js_code . '</script>';
     }
@@ -46,11 +45,14 @@ function prefix_footer_code() {
     ?>
 	<script>
         document.addEventListener("DOMContentLoaded", function(){
-            console.log('prefix_footer_code loaded...');
+            const gpdrPopUp = document.getElementById('cookie-law-info-bar');
+            gpdrPopUp.remove();
+            console.log('gpdrPopUp removed...');
         });
     </script>
     <?php
 }
+
 function unsetAllCookies() {
     if (isset($_SERVER['HTTP_COOKIE'])) {
         $cookies = explode(';', $_SERVER['HTTP_COOKIE']);
@@ -73,6 +75,8 @@ function remove_cookies_on_eu() {
             unsetAllCookies();
             echo console_log('client continent is in EU, all cookies disabled');
             add_action( 'wp_footer', 'prefix_footer_code' );
+        } else {
+            echo console_log('client continent is not in EU');
         }
     } else {
         echo console_log('CF_Geoplugin NOT INSTALLED / currently in Admin');
