@@ -111,4 +111,32 @@ function remove_cookies_on_eu() {
 }
 add_action('wp_loaded', 'remove_cookies_on_eu');
 
+
+function non_eu_ga_tracking() {
+    if (class_exists('CF_Geoplugin')) {
+        $client_continent = do_shortcode('[cfgeo_continent_code]');
+        echo console_log('client IP: ' . $client_IP);
+        echo console_log('client continent: ' . $client_continent);
+        if ($client_continent !== 'EU') {
+?>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-3696878-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-3696878-1');
+    </script>
+<?php
+        }
+    }
+}
+add_action('wp_header', 'non_eu_ga_tracking');
+
+
+
 // END: Disable all cookies when in EU using CF_Geoplugin
