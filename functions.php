@@ -25,15 +25,8 @@ add_action('wp_enqueue_scripts', 'hello_elementor_child_enqueue_scripts', 20);
 
 
 if (!is_user_logged_in()) {
+
     //START: Disable all cookies when in EU using CF_Geoplugin
-
-    function console_log($output) {
-        $js_code = 'console.log(' . $output . ')';
-        $js_code = '<script>' . $js_code . '</script>';
-        echo $js_code;
-    }
-
-
 
     function prefix_footer_code() {
 ?>
@@ -84,21 +77,14 @@ if (!is_user_logged_in()) {
         }
     }
     function remove_cookies_on_eu() {
-        if (class_exists('CF_Geoplugin') && !is_user_logged_in()) {
+        if (class_exists('CF_Geoplugin')) {
             $client_IP = do_shortcode('[cfgeo return="ip"]');
             $client_continent = do_shortcode('[cfgeo_continent_code]');
-            echo console_log('client IP: ' . $client_IP);
-            echo console_log('client continent: ' . $client_continent);
             if ($client_continent === 'EU') {
                 ini_set('session.use_cookies', '0');
                 unsetAllCookies();
-                echo console_log('client continent is in EU, all cookies disabled');
                 add_action('wp_footer', 'prefix_footer_code');
-            } else {
-                echo console_log('client continent is not in EU');
-            }
-        } else {
-            echo console_log('CF_Geoplugin NOT INSTALLED / currently in Admin');
+            } 
         }
     }
     add_action('wp_loaded', 'remove_cookies_on_eu');
@@ -107,8 +93,6 @@ if (!is_user_logged_in()) {
     function non_eu_ga_tracking() {
         if (class_exists('CF_Geoplugin')) {
             $client_continent = do_shortcode('[cfgeo_continent_code]');
-            echo console_log('client IP: ' . $client_IP);
-            echo console_log('client continent: ' . $client_continent);
             if ($client_continent !== 'EU') {
         ?>
                 <!-- Global site tag (gtag.js) - Google Analytics -->
