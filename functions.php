@@ -27,11 +27,9 @@ add_action('wp_enqueue_scripts', 'hello_elementor_child_enqueue_scripts', 20);
 if (!is_user_logged_in()) {
     //START: Disable all cookies when in EU using CF_Geoplugin
 
-    function console_log($output, $with_script_tags = true) {
-        $js_code = 'console.log(' . json_encode($output, JSON_HEX_TAG) . ');';
-        if ($with_script_tags) {
-            $js_code = '<script>' . $js_code . '</script>';
-        }
+    function console_log($output) {
+        $js_code = 'console.log(' . $output . ')';
+        $js_code = '<script>' . $js_code . '</script>';
         echo $js_code;
     }
 
@@ -86,18 +84,16 @@ if (!is_user_logged_in()) {
         }
     }
     function remove_cookies_on_eu() {
-        if (class_exists('CF_Geoplugin')) {
+        if (class_exists('CF_Geoplugin') && !is_user_logged_in()) {
             $client_IP = do_shortcode('[cfgeo return="ip"]');
             $client_continent = do_shortcode('[cfgeo_continent_code]');
             echo console_log('client IP: ' . $client_IP);
             echo console_log('client continent: ' . $client_continent);
             if ($client_continent === 'EU') {
-                if (!is_admin()) {
-                    ini_set('session.use_cookies', '0');
-                    unsetAllCookies();
-                    echo console_log('client continent is in EU, all cookies disabled');
-                    add_action('wp_footer', 'prefix_footer_code');
-                }
+                ini_set('session.use_cookies', '0');
+                unsetAllCookies();
+                echo console_log('client continent is in EU, all cookies disabled');
+                add_action('wp_footer', 'prefix_footer_code');
             } else {
                 echo console_log('client continent is not in EU');
             }
