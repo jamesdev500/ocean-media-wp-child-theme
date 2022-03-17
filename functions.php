@@ -107,12 +107,58 @@ if (!is_user_logged_in()) {
 
                     gtag('config', 'UA-3696878-1');
                 </script>
-<?php
+
+                <!-- Google Analytics snippet added by Site Kit -->
+                    <script type='text/javascript' src='https://www.googletagmanager.com/gtag/js?id=UA-3696878-1' id='google_gtagjs-js'
+                        async></script>
+                    <script type='text/javascript' id='google_gtagjs-js-after'>
+                        window.dataLayer = window.dataLayer || []; function gtag() { dataLayer.push(arguments); }
+                        gtag('set', 'linker', { "domains": ["www.oceanmediainc.com"] });
+                        gtag("js", new Date());
+                        gtag("set", "developer_id.dZTNiMT", true);
+                        gtag("config", "UA-3696878-1", { "anonymize_ip": true });
+                        gtag("config", "G-398J33BRPJ");
+                    </script>
+
+                    <!-- End Google Analytics snippet added by Site Kit -->
+
+
+                    <!-- Google Tag Manager snippet added by Site Kit -->
+                    <script type="text/javascript">
+                        (function (w, d, s, l, i) {
+                            w[l] = w[l] || [];
+                            w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
+                            var f = d.getElementsByTagName(s)[0],
+                                j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : '';
+                            j.async = true;
+                            j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+                            f.parentNode.insertBefore(j, f);
+                        })(window, document, 'script', 'dataLayer', 'GTM-K76W5G');
+
+                    </script>
+
+                    <!-- End Google Tag Manager snippet added by Site Kit -->
+    <?php
             }
         }
     }
     add_action('wp_header', 'non_eu_ga_tracking');
 
+    function non_eu_ga_trnon_eu_ga_tracking_iframeacking() {
+        if (class_exists('CF_Geoplugin')) {
+            $client_continent = do_shortcode('[cfgeo_continent_code]');
+            if ($client_continent !== 'EU') {
+        ?>
+            <!-- Google Tag Manager (noscript) snippet added by Site Kit -->
+            <noscript>
+                <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-K76W5G" height="0" width="0" style="display:none;visibility:hidden"></iframe>
+            </noscript>
+            <!-- End Google Tag Manager (noscript) snippet added by Site Kit -->
+    <?php
+            }
+        }
+    }
+    add_action('wp_body_open', 'non_eu_ga_tracking_iframe');
 
 
     // END: Disable all cookies when in EU using CF_Geoplugin
